@@ -1,0 +1,15 @@
+<div class="h-full w-full p-5 max-sm:p-4 flex flex-col justify-center items-center">
+    <div class="animate-bounce">
+        <i class="text-[15rem] max-2xl:text-[12rem] max-sm:text-[8.5rem] mb-8 max-sm:mb-6 drop-shadow-xl dark:drop-shadow-2xl fa-solid fa-cloud-arrow-up"></i>
+    </div>
+    <div class="text-[1.5rem] max-sm:text-[1.1rem] text-center">
+        <p>
+            Uploading your @(IsMultipleFiles ? "files" : "file"), this might take some time 
+            depending upon the total size & the internet speed, so hold tight!
+        </p>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool IsMultipleFiles {get; set;} = false;
+}

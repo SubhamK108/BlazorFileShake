@@ -2,10 +2,19 @@
 
 <PageTitle>FileShake</PageTitle>
 
-<div class="h-full flex flex-col justify-center items-center text-center">
-    <div class="font-mono text-4xl mb-1">
-        <h1 class="font-mono">Hello, world!</h1>
-
-        Welcome to your new app.
+<div class="h-screen max-sm:h-[85vh] flex flex-col justify-center items-center gap-6 max-sm:gap-5">
+    <div class="p-4 max-sm:p-3 bg-zinc-300 dark:bg-zinc-800 rounded-2xl shadow-xl dark:shadow-2xl">
+        <p class="font-sans text-7xl max-sm:text-4xl tracking-widest">FileShake</p>
+    </div>
+    <div class="h-[65%] w-[30%] max-2xl:h-[65%] max-2xl:w-[65%] max-sm:h-[60%] max-sm:w-[80%] bg-zinc-300 dark:bg-zinc-800 rounded-3xl shadow-xl dark:shadow-2xl">
+        <UploadContainer />
+    </div>
+    <div class="text-center">
+        <p class="px-20 max-sm:text-[0.9rem] font-sans">
+            Made with ❤️ by
+            <a href="https://github.com/SubhamK108/" class="underline hover:text-[#26272A] dark:hover:text-white">Subham K.</a>
+            using the
+            <a href="https://www.file.io/developers" class="underline hover:text-[#26272A] dark:hover:text-white">Files.io API</a>
+        </p>
     </div>
 </div>

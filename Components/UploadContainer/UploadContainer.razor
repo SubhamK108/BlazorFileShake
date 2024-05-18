@@ -1,0 +1,23 @@
+<div class="h-full w-full p-5 max-sm:p-4">
+    <div class="h-full w-full rounded-3xl border-4 border-dashed border-[#074DA6] flex items-center justify-center text-center bg-transparent hover:bg-blue-300 dark:hover:bg-blue-950 relative shadow-inner">
+        <div class="flex flex-col justify-center items-center text-center">
+            <i class="text-[13rem] max-2xl:text-[11.5rem] max-sm:text-[7rem] mb-8 max-sm:mb-6 drop-shadow-xl dark:drop-shadow-2xl fa-solid fa-file-arrow-up"></i>
+            <div class="text-[1.5rem] max-sm:text-[1.1rem]">
+                <p>Drag & Drop</p>
+                <p>OR</p>
+                <p>Click To Upload</p>
+                <p class="text-[1.3rem] max-sm:text-[1rem]">(Upto 1GB)</p>
+            </div>
+        </div>
+        <InputFile 
+            class="absolute w-full h-full opacity-0 cursor-pointer" 
+            title="" 
+            multiple="@true"
+            OnChange="@UploadFiles">
+        </InputFile>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Func<InputFileChangeEventArgs, Task> UploadFiles { get; set; } = (_) => Task.CompletedTask;
+}
