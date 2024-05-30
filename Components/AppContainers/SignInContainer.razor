@@ -1,54 +1,46 @@
-@inject IConfiguration Configuration
 @inject IJSRuntime JS
 
-<div class="h-full w-full p-16 max-sm:p-8 flex flex-col justify-center items-center gap-5">
-    <div id="google-signin-div" class="flex flex-col justify-center items-center text-center gap-20 max-2xl:gap-16 max-sm:gap-10">
-        <p class="text-[1.8rem] max-2xl:text-[1.6rem] max-sm:text-[1.25rem]">
-            FileShake uses Google Drive to store & share files. All files will be stored in a folder named
-            <i>"FileShake"</i> in your personal Google Drive storage.
-        </p>
-        <div class="flex flex-col justify-center items-center text-center gap-5 max-2xl:gap-5 max-sm:gap-3">
-            <p class="text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem]">
-                Sign In to your Google account in order to proceed:
+@if (!IsLoading)
+{
+    <div class="h-full w-full p-16 max-sm:p-8 flex flex-col justify-center items-center gap-5">
+        <div class="flex flex-col justify-center items-center text-center gap-20 max-2xl:gap-16 max-sm:gap-10">
+            <p class="text-[1.8rem] max-2xl:text-[1.6rem] max-sm:text-[1.25rem]">
+                FileShake uses your personal Google Drive storage to share files. All shared files will be stored
+                in the <i>"FileShake"</i> folder, and <b>only these files</b> will be accessible to FileShake, nothing else.
             </p>
-            <div style="color-scheme: light;">
-                <div
-                    id="g_id_onload"
-                    data-client_id="@Configuration["GoogleAuthClientId"]"
-                    data-callback="handleCredentialResponse"
-                    data-auto_prompt="false"
-                ></div>
-                <div
-                    class="g_id_signin"
-                    data-shape="pill"
-                    data-theme="outline"
-                    data-size="large"
-                ></div>
+            <div class="flex flex-col justify-center items-center text-center gap-5 max-2xl:gap-5 max-sm:gap-3">
+                <p class="text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem]">
+                    Sign In to your Google account in order to proceed:
+                </p>
+                <SignInButton />            
             </div>
         </div>
     </div>
-    <div id="google-signin-loader" hidden>
+}
+else
+{
+    <div class="h-full w-full flex justify-center items-center">
         <Spinner />
     </div>
-</div>
+}
 
 @code {
     [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await JS.InvokeVoidAsync("addNewGoogleSignInScript");
-    }
+    private bool IsLoading { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
         string userToken = await JS.InvokeAsync<string>("sessionStorage.getItem", "USER_GOOGLE_AUTH_TOKEN");
         while (userToken is null || userToken.Equals(""))
         {
-            await Task.Delay(2000);
+            await Task.Delay(1000);
             userToken = await JS.InvokeAsync<string>("sessionStorage.getItem", "USER_GOOGLE_AUTH_TOKEN");
         }
         await JS.InvokeVoidAsync("sessionStorage.removeItem", "USER_GOOGLE_AUTH_TOKEN");
+        IsLoading = true;
+        StateHasChanged();
+        await Task.Delay(1000);
+
         AppState.UserToken = userToken;
         AppState.IsSignedIn = true;
         UpdateAppMainState();

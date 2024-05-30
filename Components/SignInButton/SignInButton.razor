@@ -1,0 +1,24 @@
+@inject IConfiguration Configuration
+@inject IJSRuntime JS
+
+<div style="color-scheme: light;">
+    <div
+        id="g_id_onload"
+        data-client_id="@Configuration["GoogleAuthClientId"]"
+        data-callback="handleCredentialResponse"
+        data-auto_prompt="false"
+    ></div>
+    <div
+        class="g_id_signin"
+        data-shape="pill"
+        data-theme="outline"
+        data-size="large"
+    ></div>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("addNewGoogleSignInScript");
+    }
+}

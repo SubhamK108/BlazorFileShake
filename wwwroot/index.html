@@ -99,16 +99,16 @@
           hint: gmailId,
           prompt: "",
           callback: (tokenResponse) => {
-            accessToken = tokenResponse.access_token;
-            sessionStorage.setItem("USER_GOOGLE_AUTH_TOKEN", accessToken);
+            const accessToken = tokenResponse.access_token;
+            if (accessToken !== undefined) {
+              sessionStorage.setItem("USER_GOOGLE_AUTH_TOKEN", accessToken);
+            }
           }
         });
         client.requestAccessToken();
       }
 
       function handleCredentialResponse(response) {
-        document.getElementById("google-signin-div").className += " hidden";
-        document.getElementById("google-signin-loader").hidden = false;
         const userInfo = parseJwt(response.credential);
         getUserAuthToken(userInfo.email);
       }
