@@ -7,4 +7,5 @@ public static class AppState
     public static bool IsUploadComplete { get; set; } = false;
     public static bool IsDriveUploadInitiated { get; set; } = false;
     public static bool IsDriveUploadComplete { get; set; } = false;
+    public static List<UploadedFile> UploadedFiles { get; set; } = [];
 }

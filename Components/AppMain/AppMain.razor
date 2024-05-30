@@ -1,18 +1,18 @@
 @if (!AppState.IsSignedIn)
 {
-    <LoginContainer UpdateAppMainState="@UpdateAppMainState" />
+    <SignInContainer UpdateAppMainState="@UpdateAppMainState" />
 }
 else
 {
     if (!AppState.IsUploadComplete)
     {
-        <UploadContainer />
+        <UploadContainer UpdateAppMainState="@UpdateAppMainState" />
     }
     else
     {
         if (!AppState.IsDriveUploadInitiated)
         {
-            <FileListContainer />
+            <FileListContainer UpdateAppMainState="@UpdateAppMainState" />
         }
         else
         {
