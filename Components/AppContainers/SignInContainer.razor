@@ -36,9 +36,9 @@ else
             await Task.Delay(1000);
             userToken = await JS.InvokeAsync<string>("sessionStorage.getItem", "USER_GOOGLE_AUTH_TOKEN");
         }
-        await JS.InvokeVoidAsync("sessionStorage.removeItem", "USER_GOOGLE_AUTH_TOKEN");
         IsLoading = true;
         StateHasChanged();
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "USER_GOOGLE_AUTH_TOKEN");
         await Task.Delay(1000);
 
         AppState.UserToken = userToken;

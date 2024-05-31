@@ -7,4 +7,5 @@ public class UploadedFile
     public string FileName { get; init; } = "";
     public string FileSize { get; init; } = "";
     public string FileExtension { get; init; } = "";
+    public string FileType { get; init; } = "";
 }

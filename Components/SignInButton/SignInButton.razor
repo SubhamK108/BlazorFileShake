@@ -6,7 +6,7 @@
         id="g_id_onload"
         data-client_id="@Configuration["GoogleAuthClientId"]"
         data-callback="handleCredentialResponse"
-        data-auto_prompt="false"
+        data-auto_prompt="true"
     ></div>
     <div
         class="g_id_signin"
@@ -17,7 +17,7 @@
 </div>
 
 @code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
         await JS.InvokeVoidAsync("addNewGoogleSignInScript");
     }

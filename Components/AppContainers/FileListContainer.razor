@@ -25,17 +25,25 @@
                 </div>
             }
         </div>
-        <div class="h-[45%] w-full flex flex-col justify-center items-center gap-5 max-sm:gap-4">
-            <div class="h-full w-full flex flex-col justify-center items-center gap-2 max-sm:gap-1">
-                <p class="text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem]">Filename of combined ZIP file:</p>
-                <input
-                    class="p-1 text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem] bg-[#F2F3F5] dark:bg-[#181818] text-[#404756] dark:text-[#ffffffa6] border border-[#AEAEAE] rounded-full font-mono w-[80%] max-sm:w-[90%] text-center focus:outline-none shadow-md dark:shadow-lg tracking-wider"
-                    type="text" 
-                    placeholder="Enter Filename..." 
-                />
-            </div>
-            <div class="h-full w-full flex flex-col justify-center items-center gap-2 max-sm:gap-1">
-                <button class="text-[1.3rem] max-2xl:text-[1.3rem] max-sm:text-[1.1rem] rounded-2xl shadow-md dark:shadow-lg bg-green-700 dark:bg-green-900 hover:bg-green-900 dark:hover:bg-green-950 disabled:bg-zinc-400 dark:disabled:bg-zinc-800 hover:ring hover:ring-green-500 dark:hover:ring-green-700 disabled:ring-transparent dark:disabled:ring-transparent text-gray-200 disabled:text-zinc-300 dark:disabled:text-zinc-600 px-6 max-sm:px-5 py-4 max-2xl:py-3 max-sm:py-3">
+        <div class="h-[45%] w-full flex flex-col justify-end items-center gap-5 max-sm:gap-4">
+            @if (AppState.UploadedFiles.Count > 1)
+            {
+                <div class="h-full w-full flex flex-col justify-center items-center gap-2 max-sm:gap-1">
+                    <p class="text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem]">Filename of combined ZIP file:</p>
+                    <input
+                        class="p-1 text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem] bg-[#F2F3F5] dark:bg-[#181818] text-[#404756] dark:text-[#ffffffa6] border border-[#AEAEAE] rounded-full font-mono w-[80%] max-sm:w-[90%] text-center focus:outline-none shadow-md dark:shadow-lg tracking-wider"
+                        type="text" 
+                        placeholder="Enter Filename..." 
+                        @bind="@AppState.FinalZipFileName"
+                        @bind:event="oninput"
+                    />
+                </div>
+            }
+            <div class="h-full w-full flex flex-col justify-end items-center gap-2 max-sm:gap-1">
+                <button 
+                    class="text-[1.3rem] max-2xl:text-[1.3rem] max-sm:text-[1.1rem] rounded-2xl shadow-md dark:shadow-lg bg-green-700 dark:bg-green-900 hover:bg-green-900 dark:hover:bg-green-950 disabled:bg-zinc-400 dark:disabled:bg-zinc-800 hover:ring hover:ring-green-500 dark:hover:ring-green-700 disabled:ring-transparent dark:disabled:ring-transparent text-gray-200 disabled:text-zinc-300 dark:disabled:text-zinc-600 px-6 max-sm:px-5 py-4 max-2xl:py-3 max-sm:py-3"
+                    @onclick="@InitializeDriveUpload"
+                >
                     <i class="mr-2 fa-solid fa-share-from-square"></i>Upload & Share
                 </button>
                 <div 
@@ -92,6 +100,12 @@ else
     {
         AppState.UploadedFiles.Clear();
         AppState.IsUploadComplete = false;
+        UpdateAppMainState();
+    }
+
+    private void InitializeDriveUpload()
+    {
+        AppState.IsDriveUploadInitiated = true;
         UpdateAppMainState();
     }
 }

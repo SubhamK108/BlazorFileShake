@@ -67,7 +67,8 @@
                 FileBytes = fileBuffer,
                 FileName = file.Name,
                 FileSize = Utils.FormatBytes(file.Size),
-                FileExtension = file.Name[(file.Name.LastIndexOf('.') + 1)..].ToUpper()
+                FileExtension = file.Name[(file.Name.LastIndexOf('.') + 1)..].ToUpper(),
+                FileType = file.ContentType
             });
         }
         AppState.IsUploadComplete = true;

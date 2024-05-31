@@ -6,7 +6,7 @@
             type="text"
             readonly
             class="p-4 max-2xl:p-3 max-sm:p-2 text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem] bg-[#F2F3F5] dark:bg-[#181818] text-[#404756] dark:text-[#ffffffa6] border border-[#AEAEAE] rounded-full font-mono w-full text-center focus:outline-none shadow-md dark:shadow-lg tracking-wider cursor-pointer"
-            value="@ShareURL"
+            value="@AppState.FinalDownloadLink"
             onclick="this.setSelectionRange(0, this.value.length);"
         />
         <div class="flex flex-row justify-center items-center gap-6 max-2xl:gap-5 max-sm:gap-4">
@@ -34,6 +34,7 @@
             <button 
                 class="h-[4.7rem] w-[4.7rem] max-2xl:h-[3.8rem] max-2xl:w-[3.8rem] max-sm:h-[3rem] max-sm:w-[3rem] rounded-full shadow-md dark:shadow-lg bg-[#074DA6] dark:bg-[#05336E] hover:bg-[#05346e] dark:hover:bg-[#04234D] disabled:bg-zinc-400 dark:disabled:bg-zinc-800 hover:ring hover:ring-[#0091ff] dark:hover:ring-[#074DA6] disabled:ring-transparent dark:disabled:ring-transparent text-gray-200 disabled:text-zinc-300 dark:disabled:text-zinc-600"
                 title="Start from scratch"
+                @onclick="@RefreshApp"
             >
                 <i class="max-2xl:pt-1 max-sm:pt-1 text-[2.3rem] max-2xl:text-[1.9rem] max-sm:text-[1.5rem] fa-solid fa-arrows-rotate"></i>
             </button>
@@ -43,7 +44,7 @@
         <p class="text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem]">You can also share this QR Code:</p>
         <div class="bg-white rounded-3xl p-6 max-2xl:p-5 max-sm:p-4 border border-[#AEAEAE] shadow-md dark:shadow-lg">
             <img 
-                src="@($"https://api.qrserver.com/v1/create-qr-code/?data={ShareURL}")"
+                src="@($"https://api.qrserver.com/v1/create-qr-code/?data={AppState.FinalDownloadLink}")"
                 alt="Share QR Code"
                 loading="eager"
                 class="h-[14rem] w-[14rem] max-2xl:h-[12rem] max-2xl:w-[12rem] max-sm:h-[9rem] max-sm:w-[9rem]"
@@ -53,13 +54,13 @@
 </div>
 
 @code {
-    [Parameter] public string ShareURL { get; init; } = "https://bfs.subhamk.com/asdfghjjasdfghjjasdfghjjasdfghjjasdfghjjasdfghjj";
+    [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
     private bool IsCopyToClipboardDone { get; set; } = false;
     private Timer? Timer { get; set; } = null;
 
     private async Task CopyToClipboard()
     {
-        await JS.InvokeVoidAsync("navigator.clipboard.writeText", ShareURL);
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", AppState.FinalDownloadLink);
         IsCopyToClipboardDone = true;
         Timer = new(_ =>
         {
@@ -73,14 +74,13 @@
     {
         await JS.InvokeVoidAsync("navigator.share", new ShareData
         {
-            URL = ShareURL
+            URL = AppState.FinalDownloadLink
         });
     }
 
-    private class ShareData
+    private void RefreshApp()
     {
-        public string Title { get; } = "FileShake";
-        public string Text { get; } = "Share files with ease.";
-        public string URL { get; set; } = "";
+        AppState.RefreshAppState();
+        UpdateAppMainState();
     }
 }

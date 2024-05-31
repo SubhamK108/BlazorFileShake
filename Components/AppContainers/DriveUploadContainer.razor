@@ -1,20 +1,126 @@
-<div class="h-full w-full p-5 max-sm:p-4 flex flex-col justify-center items-center gap-5">
-    <div class="h-[15%] w-full text-[3.5rem] max-sm:text-[2.5rem] text-center font-mono tracking-widest font-bold flex flex-col justify-center items-center">
-        <p>100%</p>
-    </div>
-    <div class="h-[85%] w-full flex flex-col justify-center items-center">
-        <div class="animate-bounce">
-            <i class="text-[14rem] max-2xl:text-[11rem] max-sm:text-[8.5rem] mb-8 max-2xl:mb-5 max-sm:mb-5 drop-shadow-xl dark:drop-shadow-2xl fa-solid fa-cloud-arrow-up"></i>
+@inject IJSRuntime JS
+
+@if (!IsError)
+{
+    <div class="h-full w-full p-5 max-sm:p-4 flex flex-col justify-center items-center gap-5">
+        <div class="h-[15%] w-full text-[3.5rem] max-sm:text-[2.5rem] text-center font-mono tracking-widest font-bold flex flex-col justify-center items-center">
+            <p @ref="@uploadProgressPercent">0%</p>
         </div>
-        <div class="text-[1.5rem] max-sm:text-[1.1rem] text-center">
-            <p>
-                Uploading your @(IsMultipleFiles ? "files" : "file"), this might take some time 
-                depending upon the total size & the internet speed, so hold tight!
-            </p>
+        <div class="h-[85%] w-full flex flex-col justify-center items-center">
+            <div class="animate-bounce">
+                <i class="text-[14rem] max-2xl:text-[11rem] max-sm:text-[8.5rem] mb-8 max-2xl:mb-5 max-sm:mb-5 drop-shadow-xl dark:drop-shadow-2xl fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <div class="text-[1.5rem] max-sm:text-[1.1rem] text-center">
+                <p>
+                    Uploading your @(AppState.UploadedFiles.Count > 1 ? "files" : "file"), this might take some time 
+                    depending upon the total size & the internet speed, so hold tight!
+                </p>
+            </div>
         </div>
     </div>
-</div>
+}
+else 
+{
+    <ErrorContainer 
+        ErrorText="A problem occurred while uploading & sharing your file, please try again." 
+        ErrorAction="@TryAgainIfFailed" 
+        ErrorButtonText="Try Again" 
+    />
+}
 
 @code {
-    [Parameter] public bool IsMultipleFiles {get; set;} = false;
+    [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
+    private ElementReference uploadProgressPercent;
+    private bool IsError { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await StartDriveUpload();
+    }
+
+    private async Task StartDriveUpload()
+    {
+        if (AppState.UploadedFiles.Count > 1)
+        {
+            using MemoryStream compressedStream = new();
+            using ZipArchive archive = new(compressedStream, ZipArchiveMode.Create);
+            foreach (UploadedFile file in AppState.UploadedFiles)
+            {
+                ZipArchiveEntry zipEntry = archive.CreateEntry(file.FileName);
+                using Stream zipEntryStream = zipEntry.Open();
+                using MemoryStream originalFileStream = new(file.FileBytes);
+                await originalFileStream.CopyToAsync(zipEntryStream);
+            }
+            archive.Dispose();
+            byte[] compressedBytes = compressedStream.ToArray();
+            await ProcessDriveUpload(compressedBytes, $"{AppState.FinalZipFileName}.zip", "application/zip");
+        }
+        else
+        {
+            await ProcessDriveUpload
+            (
+                AppState.UploadedFiles[0].FileBytes,
+                AppState.UploadedFiles[0].FileName,
+                AppState.UploadedFiles[0].FileType
+            );
+        }
+    }
+
+    private async Task ProcessDriveUpload(byte[] fileByteArray, string fileName, string fileType)
+    {
+        string folderId = await DriveService.CheckForUploadFolder();
+        if (folderId.Equals("Error"))
+        {
+            IsError = true;
+            return;
+        }
+        else if (folderId.Equals(""))
+        {
+            folderId = await DriveService.CreateUploadFolder();
+            if (folderId.Equals("Error"))
+            {
+                IsError = true;
+                return;
+            }
+        }
+        string downloadLink = await UploadFile(fileByteArray, fileName, fileType, folderId);
+        if (downloadLink.Equals("Error"))
+        {
+            IsError = true;
+        }
+        else
+        {
+            AppState.FinalDownloadLink = downloadLink;
+            AppState.IsDriveUploadComplete = true;
+            UpdateAppMainState();
+        }
+    }
+
+    private async Task<string> UploadFile(byte[] fileByteArray, string fileName, string fileType, string folderId)
+    {
+        await JS.InvokeVoidAsync
+        (
+            "uploadFile", 
+            AppState.UserToken, 
+            fileByteArray, 
+            fileName, 
+            fileType, 
+            folderId,
+            uploadProgressPercent
+        );
+        string uploadResponse = await JS.InvokeAsync<string>("sessionStorage.getItem", "UPLOAD_RESPONSE");
+        while (uploadResponse is null || uploadResponse.Equals(""))
+        {
+            await Task.Delay(1000);
+            uploadResponse = await JS.InvokeAsync<string>("sessionStorage.getItem", "UPLOAD_RESPONSE");
+        }
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "UPLOAD_RESPONSE");
+        return DriveService.ProcessUploadResult(uploadResponse);
+    }
+
+    private void TryAgainIfFailed()
+    {
+        AppState.RefreshAppState();
+        UpdateAppMainState();
+    }
 }
