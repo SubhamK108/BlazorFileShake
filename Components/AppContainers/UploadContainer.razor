@@ -6,7 +6,7 @@
                 <p>Drag & Drop</p>
                 <p>OR</p>
                 <p>Click To Upload</p>
-                <p class="text-[1.3rem] max-sm:text-[1rem]">(Upto 1GB)</p>
+                <p class="text-[1.3rem] max-sm:text-[1rem]">(Upto 1GB & 100 Files)</p>
             </div>
         </div>
         <InputFile 
@@ -35,6 +35,7 @@
 @code {
     [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
     private long MaxSizeAllowed { get; } = 1024 * 1024 * 1024;
+    private int MaxFilesAllowed { get; } = 100;
     private bool IsLoading { get; set; } = false;
     private bool IsError { get; set; } = false;
     private string ErrorText { get; set; } = "";
@@ -47,9 +48,16 @@
         }
         IsLoading = true;
         long totalSize = 0;
-        await Task.Delay(1000);
+        await Task.Delay(700);
 
-        foreach (IBrowserFile file in files.GetMultipleFiles())
+        if (files.FileCount > MaxFilesAllowed)
+        {
+            ErrorText = "You can only upload 100 files at max!";
+            IsError = true;
+            IsLoading = false;
+            return;
+        }
+        foreach (IBrowserFile file in files.GetMultipleFiles(MaxFilesAllowed))
         {
             totalSize += file.Size;
             if (totalSize > MaxSizeAllowed)
