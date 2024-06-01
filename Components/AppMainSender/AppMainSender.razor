@@ -1,0 +1,33 @@
+@if (!AppState.IsSignedIn)
+{
+    <SignInContainer UpdateAppMainState="@UpdateAppMainState" />
+}
+else
+{
+    if (!AppState.IsUploadComplete)
+    {
+        <UploadContainer UpdateAppMainState="@UpdateAppMainState" />
+    }
+    else
+    {
+        if (!AppState.IsDriveUploadInitiated)
+        {
+            <FileListContainer UpdateAppMainState="@UpdateAppMainState" />
+        }
+        else
+        {
+            if (!AppState.IsDriveUploadComplete)
+            {
+                <DriveUploadContainer UpdateAppMainState="@UpdateAppMainState" />
+            }
+            else
+            {
+                <ShareContainer UpdateAppMainState="@UpdateAppMainState" />
+            }
+        }
+    }
+}
+
+@code {
+    public void UpdateAppMainState() => StateHasChanged();
+}
