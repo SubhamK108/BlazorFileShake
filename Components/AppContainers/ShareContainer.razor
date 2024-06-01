@@ -42,7 +42,7 @@
     </div>
     <div class="h-[60%] w-full flex flex-col justify-center items-center gap-5 max-sm:gap-4">
         <p class="text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem]">You can also share this QR Code:</p>
-        <div class="bg-white rounded-3xl p-6 max-2xl:p-5 max-sm:p-4 border border-[#AEAEAE] shadow-md dark:shadow-lg">
+        <div class="bg-white rounded-3xl p-6 max-2xl:p-5 max-sm:p-4 border border-[#AEAEAE] shadow-md dark:shadow-lg pointer-events-none">
             <img 
                 src="@($"https://api.qrserver.com/v1/create-qr-code/?data={AppState.FinalDownloadLink}")"
                 alt="Share QR Code"

@@ -76,7 +76,7 @@
                 FileName = file.Name,
                 FileSize = Utils.FormatBytes(file.Size),
                 FileExtension = file.Name[(file.Name.LastIndexOf('.') + 1)..].ToUpper(),
-                FileType = file.ContentType
+                FileType = file.ContentType.Equals("") ? "text/plain" : file.ContentType
             });
         }
         AppState.IsUploadComplete = true;
