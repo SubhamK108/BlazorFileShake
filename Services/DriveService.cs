@@ -82,15 +82,15 @@ public static class DriveService
             DriveMetadataStandard uploadedFile = JsonSerializer.Deserialize<DriveMetadataStandard>(uploadResponse, jsonSerializerOptions) ??
                 throw new Exception("There was a problem in uploading the file!");
             string fileId = uploadedFile.Id;
-            string fileSize = Utils.FormatBytes(Convert.ToInt64(uploadedFile.Size));
-            string fileName = uploadedFile.Name;
+            string fileName = HttpUtility.UrlEncode(uploadedFile.Name);
+            string fileSize = HttpUtility.UrlEncode(Utils.FormatBytes(Convert.ToInt64(uploadedFile.Size)));
             string fileExtension = uploadedFile.FileExtension.Equals("") switch
             {
                 true => fileName[(fileName.LastIndexOf('.') + 1)..].ToUpper(),
                 false => uploadedFile.FileExtension.ToUpper()
             };
-            string downloadKey = $"{fileId}&{fileSize}&{fileName}&{fileExtension}";
-            string encodedDownloadKey = HttpUtility.UrlEncode(Utils.CaesarCipher(downloadKey, 8));
+            string downloadKey = $"{fileName}/{fileSize}/{fileExtension}/{fileId}";
+            string encodedDownloadKey = Utils.CaesarCipher(downloadKey, 8);
             string downloadLink = $"https://bfs.subhamk.com/{encodedDownloadKey}";
             return downloadLink;
         }
