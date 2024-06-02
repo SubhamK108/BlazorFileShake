@@ -19,7 +19,7 @@ jobs:
           dotnet-version: 8.x
 
       - name: Add secrets & config file
-        run: echo ${{ secrets.APPSETTINGS }} > wwwroot/appsettings.json
+        run: echo '${{ secrets.APPSETTINGS }}' > wwwroot/appsettings.json
 
       - name: Build .NET Project
         run: dotnet build BlazorFileShake.csproj -c Release
