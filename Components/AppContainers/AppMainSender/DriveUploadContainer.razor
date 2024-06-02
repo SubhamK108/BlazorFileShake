@@ -4,7 +4,7 @@
 {
     <div class="h-full w-full p-5 max-sm:p-4 flex flex-col justify-center items-center gap-5">
         <div class="h-[15%] w-full text-[3.5rem] max-sm:text-[2.5rem] text-center font-mono tracking-widest font-bold flex flex-col justify-center items-center">
-            <p @ref="@uploadProgressPercent">0%</p>
+            <p id="upload-progress-percent">0%</p>
         </div>
         <div class="h-[85%] w-full flex flex-col justify-center items-center">
             <div class="animate-bounce">
@@ -30,7 +30,6 @@ else
 
 @code {
     [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
-    private ElementReference uploadProgressPercent;
     private bool IsError { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
@@ -60,9 +59,9 @@ else
         {
             await ProcessDriveUpload
             (
-                AppState.UploadedFiles[0].FileBytes,
-                AppState.UploadedFiles[0].FileName,
-                AppState.UploadedFiles[0].FileType
+            AppState.UploadedFiles[0].FileBytes,
+            AppState.UploadedFiles[0].FileName,
+            AppState.UploadedFiles[0].FileType
             );
         }
     }
@@ -101,13 +100,12 @@ else
     {
         await JS.InvokeVoidAsync
         (
-            "uploadFile", 
-            AppState.UserToken, 
-            fileByteArray, 
-            fileName, 
-            fileType, 
-            folderId,
-            uploadProgressPercent
+            "uploadFile",
+            AppState.UserToken,
+            fileByteArray,
+            fileName,
+            fileType,
+            folderId
         );
         string uploadResponse = await JS.InvokeAsync<string>("sessionStorage.getItem", "UPLOAD_RESPONSE");
         while (uploadResponse is null || uploadResponse.Equals(""))

@@ -108,7 +108,7 @@
         getUserAuthToken(userInfo.email);
       }
 
-      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId, progressElement) {
+      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId) {
         const fileMetadata = {
           name: fileName,
           mimeType: fileType,
@@ -129,7 +129,7 @@
         xhr.upload.onprogress = function (event) {
           if (event.lengthComputable) {
             const percentComplete = Math.round((event.loaded / event.total) * 100);
-            progressElement.innerText = `${percentComplete}%`;
+            document.getElementById("upload-progress-percent").innerText = `${percentComplete}%`;
           }
         };
         xhr.onload = function () {
