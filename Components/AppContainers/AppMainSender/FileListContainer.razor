@@ -7,7 +7,7 @@
                 <div @key="@file.Id" class="table-row py-3 max-2xl:py-3 max-sm:py-2 px-[4%] max-2xl:px-[3%] max-sm:px-[6%] rounded-2xl shadow-md dark:shadow-lg bg-zinc-400 dark:bg-zinc-700">
                     <div class="flex items-center">
                         <div class="table-cell w-[7%] max-sm:w-[10%] text-left">
-                            <i class="text-[1.4rem] max-2xl:text-[1.2rem] max-sm:text-[1rem] drop-shadow-md dark:drop-shadow-lg @GetFileIconStyle(file.FileExtension)"></i>
+                            <i class="text-[1.4rem] max-2xl:text-[1.2rem] max-sm:text-[1rem] drop-shadow-md dark:drop-shadow-lg @FileIconParser.GetFileIconStyle(file.FileExtension)"></i>
                         </div>
                         <div class="table-cell w-[77%] max-sm:w-[72%] text-left font-mono">
                             <p class="text-[1.2rem] max-2xl:text-[1.08rem] max-sm:text-[0.85rem]">@file.FileName</p>
@@ -67,29 +67,6 @@ else
 
 @code {
     [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
-
-    private string GetFileIconStyle(string fileExtension)
-    {
-        Dictionary<string, string> iconStyles = new()
-        {
-            {"MP4,MKV,WMV,MOV,AVI,AVCHD,FLV,WEBM,MPEG,MPEG-2", "fa-solid fa-video"},
-            {"JPG,JPEG,PNG,SVG,AVIF,GIF,WEBP", "fa-solid fa-image"},
-            {"ZIP,RAR,TAR,GZ", "fa-solid fa-file-zipper"},
-            {"TXT", "fa-solid fa-file-lines"},
-            {"PDF", "fa-solid fa-file-pdf"},
-            {"DOC, DOCX", "fa-solid fa-file-word"},
-            {"XLS, XLSX", "fa-solid fa-file-excel"},
-            {"PPT, PPTX", "fa-solid fa-file-powerpoint"}
-        };
-        foreach ((string extensions, string iconStyle) in iconStyles)
-        {
-            if (extensions.Contains(fileExtension))
-            {
-                return iconStyle;
-            }
-        }
-        return "fa-solid fa-file";
-    }
 
     private void DeleteFile(UploadedFile uploadedFile)
     {

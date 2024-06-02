@@ -1,0 +1,11 @@
+@page "/{*shareKey}"
+
+<PageTitle>FileShake</PageTitle>
+
+<AppMain>
+    <AppMainReceiver ShareKey="@ShareKey" />
+</AppMain>
+
+@code {
+    [Parameter] public string? ShareKey { get; set; }
+}

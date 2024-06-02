@@ -1,0 +1,59 @@
+@if (!IsLoading && !IsError)
+{
+    <DownloadContainer 
+        FileName="@FileName" 
+        FileSize="@FileSize" 
+        FileExtension="@FileExtension"
+        DownloadLink="@DownloadLink" 
+    />
+}
+@if (!IsLoading && IsError)
+{
+    <DownloadErrorContainer />
+}
+@if (IsLoading)
+{
+    <DownloadLoaderContainer />
+}
+
+@code {
+    [Parameter] public string? ShareKey { get; set; }
+    private string FileId { get; set; } = "";
+    private string FileName { get; set; } = "";
+    private string FileSize { get; set; } = "";
+    private string FileExtension { get; set; } = "";
+    private string DownloadLink { get; set; } = "";
+    private bool IsLoading { get; set; } = true;
+    private bool IsError { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (ShareKey is null || ShareKey.Equals(""))
+            {
+                throw new Exception("Invalid download link!");
+            }
+            string[] keys = Utils.DecryptCaesarCipher(ShareKey!, 8).Split('/');
+            bool isValidFile = await DriveService.VerifySharedFile(keys[3]);
+            if (isValidFile)
+            {
+                FileId = keys[3];
+                FileName = HttpUtility.UrlDecode(keys[0]);
+                FileSize = HttpUtility.UrlDecode(keys[1]);
+                FileExtension = keys[2];
+                DownloadLink = $"https://drive.google.com/uc?id={FileId}&export=download";
+            }
+            else
+            {
+                throw new Exception("Invalid download link!");
+            }
+        }
+        catch
+        {
+            IsError = true;
+        }
+        await Task.Delay(1500);
+        IsLoading = false;
+    }
+}

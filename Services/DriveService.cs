@@ -99,4 +99,19 @@ public static class DriveService
             return "Error";
         }
     }
+
+    public static async Task<bool> VerifySharedFile(string fileId)
+    {
+        try
+        {
+            string fileViewLink = $"https://drive.google.com/file/d/{fileId}/view?usp=drivesdk";
+            using HttpClient httpClient = new();
+            HttpResponseMessage response = await httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, fileViewLink));
+            return response.IsSuccessStatusCode;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }
