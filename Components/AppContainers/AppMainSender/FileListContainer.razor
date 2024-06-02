@@ -41,7 +41,8 @@
             }
             <div class="h-full w-full flex flex-col justify-end items-center gap-2 max-sm:gap-1">
                 <button 
-                    class="text-[1.3rem] max-2xl:text-[1.3rem] max-sm:text-[1.1rem] rounded-2xl shadow-md dark:shadow-lg bg-green-700 dark:bg-green-900 hover:bg-green-900 dark:hover:bg-green-950 disabled:bg-zinc-400 dark:disabled:bg-zinc-800 hover:ring hover:ring-green-500 dark:hover:ring-green-700 disabled:ring-transparent dark:disabled:ring-transparent text-gray-200 disabled:text-zinc-300 dark:disabled:text-zinc-600 px-6 max-sm:px-5 py-4 max-2xl:py-3 max-sm:py-3"
+                    class="text-[1.3rem] max-2xl:text-[1.3rem] max-sm:text-[1.1rem] rounded-2xl shadow-md dark:shadow-lg bg-green-700 dark:bg-green-900 hover:bg-green-900 dark:hover:bg-green-950 disabled:bg-zinc-400 dark:disabled:bg-zinc-900 hover:ring hover:ring-green-500 dark:hover:ring-green-700 disabled:ring-transparent dark:disabled:ring-transparent text-gray-200 disabled:text-zinc-300 dark:disabled:text-zinc-600 px-6 max-sm:px-5 py-4 max-2xl:py-3 max-sm:py-3"
+                    disabled="@(AppState.UploadedFiles.Count > 1 && AppState.FinalZipFileName.Equals(""))"
                     @onclick="@InitializeDriveUpload"
                 >
                     <i class="mr-2 fa-solid fa-share-from-square"></i>Upload & Share
