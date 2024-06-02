@@ -34,14 +34,16 @@
             {
                 throw new Exception("Invalid download link!");
             }
-            string[] keys = Utils.DecryptCaesarCipher(ShareKey!, 8).Split('/');
-            bool isValidFile = await DriveService.VerifySharedFile(keys[3]);
+            string[] keys = ShareKey!.Split('/');
+            (string downloadKey, int key) = (keys[0], Convert.ToInt32(keys[1]));
+            string[] downloadKeys = Utils.DecryptCaesarCipher(downloadKey, key).Split('&');
+            bool isValidFile = await DriveService.VerifySharedFile(downloadKeys[0]);
             if (isValidFile)
             {
-                FileId = keys[3];
-                FileName = HttpUtility.UrlDecode(keys[0]);
-                FileSize = HttpUtility.UrlDecode(keys[1]);
-                FileExtension = keys[2];
+                FileId = downloadKeys[0];
+                FileName = HttpUtility.UrlDecode(downloadKeys[1]);
+                FileSize = HttpUtility.UrlDecode(downloadKeys[2]);
+                FileExtension = downloadKeys[3];
                 DownloadLink = $"https://drive.google.com/uc?id={FileId}&export=download";
             }
             else

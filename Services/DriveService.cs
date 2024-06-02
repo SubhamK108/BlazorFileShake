@@ -6,6 +6,7 @@ public static class DriveService
     {
         WriteIndented = true
     };
+    private static readonly Random random = new();
 
     public static async Task<string> CheckForUploadFolder()
     {
@@ -89,9 +90,10 @@ public static class DriveService
                 true => fileName[(fileName.LastIndexOf('.') + 1)..].ToUpper(),
                 false => uploadedFile.FileExtension.ToUpper()
             };
-            string downloadKey = $"{fileName}/{fileSize}/{fileExtension}/{fileId}";
-            string encodedDownloadKey = Utils.CaesarCipher(downloadKey, 8);
-            string downloadLink = $"https://bfs.subhamk.com/{encodedDownloadKey}";
+            string downloadKey = $"{fileId}&{fileName}&{fileSize}&{fileExtension}";
+            int key = random.Next(1, 26);
+            string encodedDownloadKey = Utils.CaesarCipher(downloadKey, key);
+            string downloadLink = $"https://bfs.subhamk.com/{encodedDownloadKey}/{key}";
             return downloadLink;
         }
         catch
