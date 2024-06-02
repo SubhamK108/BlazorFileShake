@@ -25,7 +25,7 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-Rir8Wo9Q+hWFNsVxZGrGpIfK2VDTUEOCEtmsPp8+dUE=",
+      "hash": "sha256-Q\/aBvSYoh0bMVtca521Sb6kXpYE89O8L3YzyUneqH\/c=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -37,7 +37,7 @@
       "url": "_framework\/dotnet.native.wasm"
     },
     {
-      "hash": "sha256-nKmmJZQ3g3EqwiRl86aRWSsEXuWV\/rsHMYzeqXChqSQ=",
+      "hash": "sha256-Z8u0f0dzddW5RqJHNwKO8P\/DKwmLryrh1t+degOBuKk=",
       "url": "_framework\/BlazorFileShake.wasm"
     },
     {
@@ -177,15 +177,15 @@
       "url": "appsettings.json"
     },
     {
-      "hash": "sha256-nGi13ZRe5AX53oM3EkA7YnTbnEjTDQejpMhOjI1BPV8=",
+      "hash": "sha256-ylhQSXwlyw\/EqFS5WhvdWAb1eEitg47I2+mkmo7SoDI=",
       "url": "android-chrome-192x192.png"
     },
     {
-      "hash": "sha256-A3rwhFpXz3bgVJADxEeiVC9SB+d4NjULk\/sYgQT3I6c=",
+      "hash": "sha256-DUAoCmNSvZtW3iL8OisGvMYQZCKEegqXzoalnWqwWs8=",
       "url": "android-chrome-512x512.png"
     },
     {
-      "hash": "sha256-8Oot5KNEOMyva1THTyzOfRIPYMD95w+\/YUjPFMxZAcQ=",
+      "hash": "sha256-WRO9iLjhFctd9ELx7VofM2Twhw72hsbyNrJ3PBB9+Gw=",
       "url": "apple-touch-icon.png"
     },
     {
@@ -193,15 +193,15 @@
       "url": "css\/main.min.css"
     },
     {
-      "hash": "sha256-sn4ENEcuWskI1Zy0GQ2ssM\/3VDG1EHAY9VRSsajcmBk=",
+      "hash": "sha256-caA0Pbk\/lwGdbaslee4aiJSeNckX6dOT3anOU409zCs=",
       "url": "favicon-16x16.png"
     },
     {
-      "hash": "sha256-CIYX3syRn9cHSYg3TCrM\/klrohhIsBh5NEDAuSBc\/gU=",
+      "hash": "sha256-rOKEWxAyNMKy2k5Y7uiBO5laqSVLXEFXthsLOnGvpkk=",
       "url": "favicon-32x32.png"
     },
     {
-      "hash": "sha256-Tuq7oqlfh7SCzfm8o1MuuvXZKNZxrKNPq6kW2WRd3ag=",
+      "hash": "sha256-lm9o0j0r4ZCM\/\/JryGui\/7e+egVjOiGiHxvjQgUmJhc=",
       "url": "favicon.ico"
     },
     {
@@ -269,5 +269,5 @@
       "url": "manifest.json"
     }
   ],
-  "version": "1\/lauBzE"
+  "version": "M\/sAhgg5"
 };
