@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html class="max-w-[100vw] overflow-x-hidden" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>FileShake</title>
+    <base href="/" />
+    <link rel="stylesheet" href="css/main.min.css" />
+    <link rel="stylesheet" href="fontawesome/css/fontawesome.min.css" />
+    <link rel="stylesheet" href="fontawesome/css/brands.min.css" />
+    <link rel="stylesheet" href="fontawesome/css/solid.min.css" />
+    <meta name="description" content="Share files with ease." />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://bfs.subhamk.com" />
+    <meta name="twitter:title" content="FileShake" />
+    <meta name="twitter:description" content="Share files with ease." />
+    <meta name="twitter:image" content="https://bfs.subhamk.com/android-chrome-512x512.png" />
+    <meta name="twitter:creator" content="@SubhamK108" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FileShake" />
+    <meta property="og:description" content="Share files with ease." />
+    <meta property="og:site_name" content="FileShake" />
+    <meta property="og:url" content="https://bfs.subhamk.com" />
+    <meta property="og:image" content="https://bfs.subhamk.com/android-chrome-512x512.png" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F3F5" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818" />
+  </head>
+
+  <body class="max-w-[100vw] overflow-x-hidden bg-[#F2F3F5] dark:bg-[#181818] text-[#404756] dark:text-[#ffffffa6]">
+    <div id="app">
+      <div class="h-screen max-sm:h-[85vh] flex flex-col justify-center items-center gap-32 max-2xl:gap-28 max-sm:gap-20">
+        <img class="w-[250px] max-sm:w-[150px] h-auto" src="android-chrome-512x512.png" alt="FileShake App Icon" />
+        <div class="m-4 flex flex-row space-x-4 justify-center items-center">
+          <div
+            class="w-[5.5rem] h-[5.5rem] max-sm:w-[4.5rem] max-sm:h-[4.5rem] rounded-full animate-spin border-[6.5px] max-sm:border-[5px] border-solid border-current border-t-transparent"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div> -->
+
+    <script type="text/javascript">
+      function addNewGoogleSignInScript() {
+        const prevScript = document.getElementById("google-signin-script");
+        document.body.removeChild(prevScript);
+
+        const newScript = document.createElement("script");
+        newScript.id = "google-signin-script";
+        newScript.src = "https://accounts.google.com/gsi/client";
+        newScript.async = true;
+        newScript.defer = true;
+        document.body.appendChild(newScript);
+      }
+
+      function parseJwt(jwt) {
+        let base64Url = jwt.split(".")[1];
+        let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        let jsonPayload = decodeURIComponent(
+          window
+            .atob(base64)
+            .split("")
+            .map(function (c) {
+              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join("")
+        );
+        return JSON.parse(jsonPayload);
+      }
+
+      async function getUserAuthToken(gmailId) {
+        const response = await fetch("./appsettings.json");
+        const appSettings = await response.json();
+
+        const client = google.accounts.oauth2.initTokenClient({
+          client_id: appSettings.GoogleAuthClientId,
+          scope:
+            "https://www.googleapis.com/auth/userinfo.profile \
+            https://www.googleapis.com/auth/drive.appdata \
+            https://www.googleapis.com/auth/drive.install \
+            https://www.googleapis.com/auth/drive.file",
+          hint: gmailId,
+          prompt: "",
+          callback: (tokenResponse) => {
+            const accessToken = tokenResponse.access_token;
+            if (accessToken !== undefined) {
+              sessionStorage.setItem("USER_GOOGLE_AUTH_TOKEN", accessToken);
+            }
+          }
+        });
+        client.requestAccessToken();
+      }
+
+      function handleCredentialResponse(response) {
+        const userInfo = parseJwt(response.credential);
+        getUserAuthToken(userInfo.email);
+      }
+
+      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId, progressElement) {
+        const fileMetadata = {
+          name: fileName,
+          mimeType: fileType,
+          parents: [folderId]
+        };
+        const fileMetadataJSON = JSON.stringify(fileMetadata, null, "  ");
+
+        const formData = new FormData();
+        formData.append("metadata", new Blob([fileMetadataJSON], { type: "application/json" }));
+        formData.append("file", new Blob([fileBuffer], { type: fileType }));
+        const REQUIRED_FIELDS =
+          "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
+        const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", _URL, true);
+        xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
+        xhr.responseType = "text";
+        xhr.upload.onprogress = function (event) {
+          if (event.lengthComputable) {
+            const percentComplete = Math.round((event.loaded / event.total) * 100);
+            progressElement.innerText = `${percentComplete}%`;
+          }
+        };
+        xhr.onload = function () {
+          sessionStorage.setItem("UPLOAD_RESPONSE", xhr.response);
+        };
+        xhr.onerror = function () {
+          sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
+        };
+        xhr.send(formData);
+      }
+    </script>
+
+    <script id="google-signin-script" src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+      navigator.serviceWorker.register("service-worker.js");
+    </script>
+  </body>
+</html>
