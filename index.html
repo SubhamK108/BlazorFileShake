@@ -129,12 +129,15 @@
           if (event.lengthComputable) {
             const percentComplete = Math.round((event.loaded / event.total) * 100);
             element.innerText = `${percentComplete}%`;
+            console.log(event);
+            console.log(`${percentComplete}%, ${element.innerText}`);
           }
         };
         xhr.onload = function () {
           sessionStorage.setItem("UPLOAD_RESPONSE", xhr.response);
         };
-        xhr.onerror = function () {
+        xhr.onerror = function (event) {
+          console.log(event);
           sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
         };
         xhr.send(formData);
