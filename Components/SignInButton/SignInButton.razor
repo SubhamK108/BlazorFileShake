@@ -2,12 +2,15 @@
 @inject IJSRuntime JS
 
 <div style="color-scheme: light;">
-    <div
-        id="g_id_onload"
-        data-client_id="@Configuration["GoogleAuthClientId"]"
-        data-callback="handleCredentialResponse"
-        data-auto_prompt="false"
-    ></div>
+    <div style="color-scheme: light;">
+        <div
+            id="g_id_onload"
+            data-client_id="@Configuration["GoogleAuthClientId"]"
+            data-callback="handleCredentialResponse"
+            data-auto_prompt="true"
+            data-itp_support="true"
+        ></div>
+    </div>
     <div
         class="g_id_signin"
         data-shape="pill"

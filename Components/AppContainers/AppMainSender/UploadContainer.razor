@@ -47,7 +47,6 @@
             return;
         }
         IsLoading = true;
-        long totalSize = 0;
         await Task.Delay(700);
 
         if (files.FileCount > MaxFilesAllowed)
@@ -57,6 +56,7 @@
             IsLoading = false;
             return;
         }
+        long totalSize = 0;
         foreach (IBrowserFile file in files.GetMultipleFiles(MaxFilesAllowed))
         {
             totalSize += file.Size;
