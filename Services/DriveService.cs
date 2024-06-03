@@ -93,7 +93,7 @@ public static class DriveService
             string downloadKey = $"{fileId}&{fileName}&{fileSize}&{fileExtension}";
             int key = random.Next(1, 26);
             string encodedDownloadKey = Utils.CaesarCipher(downloadKey, key);
-            string downloadLink = $"https://bfs.subhamk.com/{encodedDownloadKey}/{key}";
+            string downloadLink = $"https://bfs.subhamk.com/r/{encodedDownloadKey}/{key}";
             return downloadLink;
         }
         catch
