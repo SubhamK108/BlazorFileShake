@@ -61,7 +61,6 @@
         newScript.id = "google-signin-script";
         newScript.src = "https://accounts.google.com/gsi/client";
         newScript.async = true;
-        newScript.defer = true;
         document.body.appendChild(newScript);
       }
 
@@ -108,7 +107,7 @@
         getUserAuthToken(userInfo.email);
       }
 
-      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId) {
+      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId, element) {
         const fileMetadata = {
           name: fileName,
           mimeType: fileType,
@@ -129,7 +128,7 @@
         xhr.upload.onprogress = function (event) {
           if (event.lengthComputable) {
             const percentComplete = Math.round((event.loaded / event.total) * 100);
-            document.getElementById("upload-progress-percent").innerText = `${percentComplete}%`;
+            element.innerText = `${percentComplete}%`;
           }
         };
         xhr.onload = function () {
@@ -142,7 +141,7 @@
       }
     </script>
 
-    <script id="google-signin-script" src="https://accounts.google.com/gsi/client" async defer></script>
+    <script id="google-signin-script" src="https://accounts.google.com/gsi/client" async></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
       navigator.serviceWorker.register("service-worker.js");
