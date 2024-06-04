@@ -128,15 +128,15 @@
         xhr.setRequestHeader("Expires", "Thu, 1 Jan 1970 00:00:00 GMT");
         xhr.setRequestHeader("Pragma", "no-cache");
         xhr.responseType = "text";
-        xhr.upload.onprogress = function (event) {
+        xhr.upload.addEventListener("progress", function (event) {
           console.log(event);
           if (event.lengthComputable) {
             // console.log(document.getElementById("progress-percent").innerText);
             const percentComplete = Math.round((event.loaded / event.total) * 100);
             console.log(percentComplete);
-            // document.getElementById("progress-percent").innerText = `${percentComplete}%`;
+            document.getElementById("progress-percent").innerText = `${percentComplete}%`;
           }
-        };
+        });
         xhr.onload = function () {
           sessionStorage.setItem("UPLOAD_RESPONSE", xhr.response);
         };
