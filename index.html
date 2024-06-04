@@ -135,7 +135,6 @@
           sessionStorage.setItem("UPLOAD_RESPONSE", xhr.response);
         };
         xhr.onerror = function (event) {
-          console.log(event);
           sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
         };
         xhr.send(formData);

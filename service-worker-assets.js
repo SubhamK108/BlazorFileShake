@@ -25,7 +25,7 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-Np\/UNaZmfoYHiCn5mv6gVcKRlbZEV9DjcR260+ixutU=",
+      "hash": "sha256-waEalnI4BAegYMY35eBbZYpk8O3Mc8Oj2MljNWfTBuY=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -37,7 +37,7 @@
       "url": "_framework\/dotnet.native.wasm"
     },
     {
-      "hash": "sha256-IKyDV9TGU6K5RTbNdLXxGxAulNr+elV3fTAxYPVCc7s=",
+      "hash": "sha256-ocJ6rShcB2X6\/b9lvlHBNanZZQul9DnUSYQ7V6huqNc=",
       "url": "_framework\/BlazorFileShake.wasm"
     },
     {
@@ -189,7 +189,7 @@
       "url": "apple-touch-icon.png"
     },
     {
-      "hash": "sha256-zvFGqZF6HfCk\/nUlLx27GS9bFYarJ2PoiLA4U4935qw=",
+      "hash": "sha256-IonP1gg40Jt6YgwLYTBIbwKNmSwVeGdZ5cN\/x3ZK\/HM=",
       "url": "css\/main.min.css"
     },
     {
@@ -261,7 +261,7 @@
       "url": "images\/screenshots\/SS_8.jpeg"
     },
     {
-      "hash": "sha256-oMTGRV6kGjiOiI9BGelnKb5FSnqjW1J+jFHVphIR0LY=",
+      "hash": "sha256-q4WNC88VM9qmsDxCAm48hyvKNLRtWV3au8rIXAh5Zq0=",
       "url": "index.html"
     },
     {
@@ -269,5 +269,5 @@
       "url": "manifest.json"
     }
   ],
-  "version": "h\/pZyipo"
+  "version": "k\/WhbX0F"
 };
