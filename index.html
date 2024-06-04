@@ -122,11 +122,6 @@
           "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
         const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", _URL, true);
-        xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
-        xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
-        xhr.setRequestHeader("Expires", "Thu, 1 Jan 1970 00:00:00 GMT");
-        xhr.setRequestHeader("Pragma", "no-cache");
         xhr.responseType = "text";
         xhr.upload.addEventListener("progress", function (event) {
           console.log(event);
@@ -143,6 +138,11 @@
         xhr.onerror = function (event) {
           sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
         };
+        xhr.open("POST", _URL, true);
+        xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
+        xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
+        xhr.setRequestHeader("Expires", "Thu, 1 Jan 1970 00:00:00 GMT");
+        xhr.setRequestHeader("Pragma", "no-cache");
         xhr.send(formData);
         console.log(xhr);
       }
