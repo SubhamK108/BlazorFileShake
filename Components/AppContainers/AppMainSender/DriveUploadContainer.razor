@@ -33,10 +33,13 @@ else
     private bool IsError { get; set; } = false;
     private ElementReference _progressPercent;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await Task.Delay(1);
-        await StartDriveUpload();
+        if (firstRender)
+        {
+            await Task.Delay(1);
+            await StartDriveUpload();
+        }
     }
 
     private async Task StartDriveUpload()
@@ -73,6 +76,7 @@ else
         if (folderId.Equals("Error"))
         {
             IsError = true;
+            StateHasChanged();
             return;
         }
         else if (folderId.Equals(""))
@@ -81,6 +85,7 @@ else
             if (folderId.Equals("Error"))
             {
                 IsError = true;
+                StateHasChanged();
                 return;
             }
         }
@@ -88,6 +93,7 @@ else
         if (downloadLink.Equals("Error"))
         {
             IsError = true;
+            StateHasChanged();
         }
         else
         {
