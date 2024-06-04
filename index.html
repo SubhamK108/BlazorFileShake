@@ -107,7 +107,7 @@
         getUserAuthToken(userInfo.email);
       }
 
-      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId) {
+      function uploadFile(userToken, fileBuffer, fileName, fileType, folderId) {
         const fileMetadata = {
           name: fileName,
           mimeType: fileType,
