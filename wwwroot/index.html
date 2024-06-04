@@ -107,7 +107,7 @@
         getUserAuthToken(userInfo.email);
       }
 
-      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId, element) {
+      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId) {
         const fileMetadata = {
           name: fileName,
           mimeType: fileType,
@@ -125,10 +125,10 @@
         xhr.responseType = "text";
         xhr.upload.onprogress = function (event) {
           console.log(event);
-          if (event.lengthComputable && element !== null) {
-            console.log(element.innerText);
+          if (event.lengthComputable) {
+            console.log(document.getElementById("progress-percent").innerText);
             const percentComplete = Math.round((event.loaded / event.total) * 100);
-            element.innerText = `${percentComplete}%`;
+            document.getElementById("progress-percent").innerText = `${percentComplete}%`;
           }
         };
         xhr.onload = function () {
