@@ -10,7 +10,9 @@
                             <i class="text-[1.4rem] max-2xl:text-[1.2rem] max-sm:text-[1rem] drop-shadow-md dark:drop-shadow-lg @FileIconParser.GetFileIconStyle(file.FileExtension)"></i>
                         </div>
                         <div class="table-cell w-[77%] max-sm:w-[72%] text-left font-mono">
-                            <p class="text-[1.2rem] max-2xl:text-[1.08rem] max-sm:text-[0.9rem]">@file.FileName</p>
+                            <div class="overflow-x-auto">
+                                <p class="text-[1.2rem] max-2xl:text-[1.08rem] max-sm:text-[0.9rem]">@file.FileName</p>
+                            </div>
                             <p class="text-[0.95rem] max-2xl:text-[0.9rem] max-sm:text-[0.75rem]">@file.FileSize • @file.FileExtension</p>
                         </div>
                         <div class="table-cell w-[16%] max-sm:w-[18%] text-right">
