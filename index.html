@@ -120,10 +120,12 @@
         formData.append("file", new Blob([fileBuffer], { type: fileType }));
         const REQUIRED_FIELDS =
           "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
-        const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
+        const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}&cacheBuster=${new Date().getTime()}`;
         const xhr = new XMLHttpRequest();
+        xhr.open("POST", _URL, true);
+        xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
         xhr.responseType = "text";
-        xhr.upload.addEventListener("progress", function (event) {
+        xhr.upload.onprogress = function (event) {
           console.log(event);
           if (event.lengthComputable) {
             // console.log(document.getElementById("progress-percent").innerText);
@@ -131,17 +133,15 @@
             console.log(percentComplete);
             document.getElementById("progress-percent").innerText = `${percentComplete}%`;
           }
-        });
+        };
         xhr.onload = function () {
           sessionStorage.setItem("UPLOAD_RESPONSE", xhr.response);
         };
         xhr.onerror = function (event) {
           sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
         };
-        xhr.open("POST", _URL, true);
-        xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
-        xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
-        xhr.setRequestHeader("Expires", "Thu, 1 Jan 1970 00:00:00 GMT");
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+        // xhr.setRequestHeader("Expires", "Thu, 1 Jan 1970 00:00:00 GMT");
         xhr.setRequestHeader("Pragma", "no-cache");
         xhr.send(formData);
         console.log(xhr);
