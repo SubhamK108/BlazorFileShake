@@ -122,7 +122,6 @@
           "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
         const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", _URL, true);
         xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
         xhr.responseType = "text";
         xhr.upload.onprogress = function (event) {
@@ -139,6 +138,7 @@
         xhr.onerror = function (event) {
           sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
         };
+        xhr.open("POST", _URL, true);
         xhr.send(formData);
       }
     </script>
