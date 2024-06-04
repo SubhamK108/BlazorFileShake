@@ -126,6 +126,8 @@
         xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
         xhr.responseType = "text";
         xhr.upload.onprogress = function (event) {
+          console.log(event);
+          console.log(element.innerText);
           if (event.lengthComputable) {
             const percentComplete = Math.round((event.loaded / event.total) * 100);
             element.innerText = `${percentComplete}%`;
