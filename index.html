@@ -124,6 +124,9 @@
         const xhr = new XMLHttpRequest();
         xhr.open("POST", _URL, true);
         xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
+        xhr.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
+        xhr.setRequestHeader("Expires", "Thu, 1 Jan 1970 00:00:00 GMT");
+        xhr.setRequestHeader("Pragma", "no-cache");
         xhr.responseType = "text";
         xhr.upload.onprogress = function (event) {
           console.log(event);
