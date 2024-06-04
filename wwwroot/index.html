@@ -128,9 +128,10 @@
         xhr.upload.onprogress = function (event) {
           console.log(event);
           if (event.lengthComputable) {
-            console.log(document.getElementById("progress-percent").innerText);
+            // console.log(document.getElementById("progress-percent").innerText);
             const percentComplete = Math.round((event.loaded / event.total) * 100);
-            document.getElementById("progress-percent").innerText = `${percentComplete}%`;
+            console.log(percentComplete);
+            // document.getElementById("progress-percent").innerText = `${percentComplete}%`;
           }
         };
         xhr.onload = function () {
