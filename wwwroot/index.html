@@ -127,8 +127,8 @@
         xhr.responseType = "text";
         xhr.upload.onprogress = function (event) {
           console.log(event);
-          console.log(element.innerText);
-          if (event.lengthComputable) {
+          if (event.lengthComputable && element !== null) {
+            console.log(element.innerText);
             const percentComplete = Math.round((event.loaded / event.total) * 100);
             element.innerText = `${percentComplete}%`;
           }
