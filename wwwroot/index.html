@@ -125,12 +125,12 @@
         xhr.open("POST", _URL, true);
         xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
         xhr.responseType = "text";
-        xhr.upload.onprogress = function (event) {
+        xhr.upload.addEventListener("progress", function (event) {
           if (event.lengthComputable) {
             const percentComplete = Math.round((event.loaded / event.total) * 100);
             element.innerText = `${percentComplete}%`;
           }
-        };
+        }, false);
         xhr.onload = function () {
           sessionStorage.setItem("UPLOAD_RESPONSE", xhr.response);
         };
