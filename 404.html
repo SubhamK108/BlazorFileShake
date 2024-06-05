@@ -107,7 +107,7 @@
         getUserAuthToken(userInfo.email);
       }
 
-      function uploadFile(userToken, fileBuffer, fileName, fileType, folderId) {
+      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId, element) {
         const fileMetadata = {
           name: fileName,
           mimeType: fileType,
@@ -120,18 +120,15 @@
         formData.append("file", new Blob([fileBuffer], { type: fileType }));
         const REQUIRED_FIELDS =
           "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
-        const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}&cacheBuster=${new Date().getTime()}`;
+        const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
         const xhr = new XMLHttpRequest();
         xhr.open("POST", _URL, true);
         xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
         xhr.responseType = "text";
         xhr.upload.onprogress = function (event) {
-          console.log(event);
           if (event.lengthComputable) {
-            // console.log(document.getElementById("progress-percent").innerText);
             const percentComplete = Math.round((event.loaded / event.total) * 100);
-            console.log(percentComplete);
-            document.getElementById("progress-percent").innerText = `${percentComplete}%`;
+            element.innerText = `${percentComplete}%`;
           }
         };
         xhr.onload = function () {
@@ -140,17 +137,7 @@
         xhr.onerror = function (event) {
           sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
         };
-        xhr.onloadstart = function () {
-          console.log("Upload started.");
-        };
-        xhr.onloadend = function () {
-          console.log("Upload ended.")
-        }
-        xhr.setRequestHeader("Cache-Control", "no-cache");
-        // xhr.setRequestHeader("Expires", "Thu, 1 Jan 1970 00:00:00 GMT");
-        xhr.setRequestHeader("Pragma", "no-cache");
         xhr.send(formData);
-        console.log(xhr);
       }
     </script>
 
