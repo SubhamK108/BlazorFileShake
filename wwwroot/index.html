@@ -107,7 +107,7 @@
         getUserAuthToken(userInfo.email);
       }
 
-      function uploadFile(userToken, fileBuffer, fileName, fileType, folderId, element) {
+      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId, element) {
         const fileMetadata = {
           name: fileName,
           mimeType: fileType,
@@ -122,21 +122,34 @@
           "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
         const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", _URL);
+        xhr.open("POST", _URL, true);
         xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
-        xhr.responseType = "text";
-        xhr.upload.addEventListener("progress", function (event) {
+        // xhr.responseType = "text";
+        console.log("Attaching onprogress event listener.");
+        xhr.upload.onprogress = function (event) {
           if (event.lengthComputable) {
             const percentComplete = Math.round((event.loaded / event.total) * 100);
             element.innerText = `${percentComplete}%`;
+            console.log(percentComplete);
           }
-        }, false);
+        };
+        xhr.onreadystatechange = function () {
+          console.log(`XHR state change: ${xhr.readyState}, Status: ${xhr.status}`);
+        };
+        xhr.onloadstart = function () {
+          console.log("Upload started.");
+        }
+        xhr.onloadend = function () {
+          console.log("Upload ended.");
+        }
         xhr.onload = function () {
-          sessionStorage.setItem("UPLOAD_RESPONSE", xhr.response);
+          console.log("File uploaded successfully.");
+          sessionStorage.setItem("UPLOAD_RESPONSE", xhr.responseText);
         };
         xhr.onerror = function (event) {
           sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
         };
+        console.log("Sending request.");
         xhr.send(formData);
       }
     </script>
