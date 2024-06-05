@@ -121,40 +121,31 @@
         const REQUIRED_FIELDS =
           "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
         const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", _URL, true);
-        xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
-        // xhr.responseType = "text";
-        console.log("Attaching onprogress event listener.");
-        xhr.upload.onprogress = function (event) {
-          if (event.lengthComputable) {
-            const percentComplete = Math.round((event.loaded / event.total) * 100);
-            element.innerText = `${percentComplete}%`;
-            console.log(percentComplete);
-          }
-        };
-        xhr.onreadystatechange = function () {
-          console.log(`XHR state change: ${xhr.readyState}, Status: ${xhr.status}`);
-        };
-        xhr.onloadstart = function () {
-          console.log("Upload started.");
-        }
-        xhr.onloadend = function () {
-          console.log("Upload ended.");
-        }
-        xhr.onload = function () {
-          console.log("File uploaded successfully.");
-          sessionStorage.setItem("UPLOAD_RESPONSE", xhr.responseText);
-        };
-        xhr.onerror = function (event) {
+        try {
+          const response = await axios.post(_URL, formData, {
+            headers: {
+              "Authorization": `Bearer ${userToken}`,
+              "Content-Type": "multipart/form-data"
+            },
+            responseType: "text",
+            onUploadProgress: function (progressEvent) {
+              if (progressEvent.lengthComputable) {
+                const percentComplete = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                element.innerText = `${percentComplete}%`;
+              }
+            }
+          });
+          console.log(response.data);
+          sessionStorage.setItem("UPLOAD_RESPONSE", response.data);
+        } catch (error) {
+          console.log(error);
           sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
-        };
-        console.log("Sending request.");
-        xhr.send(formData);
+        }
       }
     </script>
 
     <script id="google-signin-script" src="https://accounts.google.com/gsi/client" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
       navigator.serviceWorker.register("service-worker.js");
