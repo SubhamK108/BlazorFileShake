@@ -140,6 +140,12 @@
         xhr.onerror = function (event) {
           sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
         };
+        xhr.onloadstart = function () {
+          console.log("Upload started.");
+        };
+        xhr.onloadend = function () {
+          console.log("Upload ended.")
+        }
         xhr.setRequestHeader("Cache-Control", "no-cache");
         // xhr.setRequestHeader("Expires", "Thu, 1 Jan 1970 00:00:00 GMT");
         xhr.setRequestHeader("Pragma", "no-cache");
