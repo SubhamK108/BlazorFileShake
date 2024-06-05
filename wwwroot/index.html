@@ -107,7 +107,7 @@
         getUserAuthToken(userInfo.email);
       }
 
-      async function uploadFile(userToken, fileBuffer, fileName, fileType, folderId, element) {
+      function uploadFile(userToken, fileBuffer, fileName, fileType, folderId, element) {
         const fileMetadata = {
           name: fileName,
           mimeType: fileType,
@@ -122,7 +122,7 @@
           "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
         const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", _URL, true);
+        xhr.open("POST", _URL);
         xhr.setRequestHeader("Authorization", `Bearer ${userToken}`);
         xhr.responseType = "text";
         xhr.upload.addEventListener("progress", function (event) {
