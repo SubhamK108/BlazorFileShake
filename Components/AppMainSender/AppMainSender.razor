@@ -1,12 +1,12 @@
 @if (!AppState.IsSignedIn)
 {
-    <SignInContainer UpdateAppMainState="@UpdateAppMainState" />
+    <SignInContainer UpdateAppMainStateAsync="@UpdateAppMainStateAsync" />
 }
 else
 {
     if (!AppState.IsUploadComplete)
     {
-        <UploadContainer UpdateAppMainState="@UpdateAppMainState" />
+        <UploadContainer UpdateAppMainStateAsync="@UpdateAppMainStateAsync" />
     }
     else
     {
@@ -30,4 +30,5 @@ else
 
 @code {
     public void UpdateAppMainState() => StateHasChanged();
+    public async Task UpdateAppMainStateAsync() => await InvokeAsync(StateHasChanged);
 }

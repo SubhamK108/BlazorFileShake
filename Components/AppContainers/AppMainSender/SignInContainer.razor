@@ -34,7 +34,7 @@ else
 }
 
 @code {
-    [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
+    [Parameter] public Func<Task> UpdateAppMainStateAsync { get; init; } = () => Task.CompletedTask;
     private bool IsLoading { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
@@ -46,12 +46,12 @@ else
             userToken = await JS.InvokeAsync<string>("sessionStorage.getItem", "USER_GOOGLE_AUTH_TOKEN");
         }
         IsLoading = true;
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
         await JS.InvokeVoidAsync("sessionStorage.removeItem", "USER_GOOGLE_AUTH_TOKEN");
         await Task.Delay(1000);
 
         AppState.UserToken = userToken;
         AppState.IsSignedIn = true;
-        UpdateAppMainState();
+        await UpdateAppMainStateAsync();
     }
 }

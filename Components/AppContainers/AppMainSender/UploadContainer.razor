@@ -33,7 +33,7 @@
 }
 
 @code {
-    [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
+    [Parameter] public Func<Task> UpdateAppMainStateAsync { get; init; } = () => Task.CompletedTask;
     private long MaxSizeAllowed { get; } = 1024 * 1024 * 1024;
     private int MaxFilesAllowed { get; } = 100;
     private bool IsLoading { get; set; } = false;
@@ -80,7 +80,7 @@
             });
         }
         AppState.IsUploadComplete = true;
-        UpdateAppMainState();
+        await UpdateAppMainStateAsync();
     }
 
     private void TryAgainIfFailed() => IsError = false;

@@ -56,17 +56,17 @@
 @code {
     [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
     private bool IsCopyToClipboardDone { get; set; } = false;
-    private Timer? Timer { get; set; } = null;
+    private Timer? _timer = null;
 
     private async Task CopyToClipboard()
     {
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", AppState.FinalDownloadLink);
         IsCopyToClipboardDone = true;
-        Timer = new(_ =>
+        _timer = new(async _ =>
         {
             IsCopyToClipboardDone = false;
-            StateHasChanged();
-            Timer!.Dispose();
+            await InvokeAsync(StateHasChanged);
+            _timer?.Dispose();
         }, null, 2500, Timeout.Infinite);
     }
 
