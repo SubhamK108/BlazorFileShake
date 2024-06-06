@@ -99,7 +99,7 @@ else
 
     private async Task<string> UploadFile(byte[] fileByteArray, string fileName, string fileType, string folderId)
     {
-        await JS.InvokeVoidAsync
+        string uploadResponse = await JS.InvokeAsync<string>
         (
             "uploadFile",
             AppState.UserToken,
@@ -109,13 +109,7 @@ else
             folderId,
             _progressPercent
         );
-        string uploadResponse = await JS.InvokeAsync<string>("sessionStorage.getItem", "UPLOAD_RESPONSE");
-        while (uploadResponse is null || uploadResponse.Equals(""))
-        {
-            await Task.Delay(1000);
-            uploadResponse = await JS.InvokeAsync<string>("sessionStorage.getItem", "UPLOAD_RESPONSE");
-        }
-        await JS.InvokeVoidAsync("sessionStorage.removeItem", "UPLOAD_RESPONSE");
+        await Task.Delay(1500);
         return DriveService.ProcessUploadResult(uploadResponse);
     }
 
