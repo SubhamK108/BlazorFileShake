@@ -114,38 +114,49 @@
           parents: [folderId]
         };
         const fileMetadataJSON = JSON.stringify(fileMetadata, null, "  ");
+        const fileMetadataJSONBlob = new Blob([fileMetadataJSON], { type: "application/json" });
+        const fileBlob = new Blob([fileBuffer], { type: fileType });
+
+        const uploadSpeed = 512000;
+        const estimatedTime = fileBlob.size / uploadSpeed * 100;
+        const intervalTime = Math.min(estimatedTime / 100, 1000);
+        const startTime = Date.now();
+        const interval = setInterval(() => {
+          const elapsedTime = Date.now() - startTime;
+          const percentComplete = Math.min(Math.round((elapsedTime / estimatedTime) * 100), 100);
+          element.innerText = `${percentComplete}%`;
+          if (percentComplete >= 100) {
+            clearInterval(interval);
+          }
+        }, intervalTime);
 
         const formData = new FormData();
-        formData.append("metadata", new Blob([fileMetadataJSON], { type: "application/json" }));
-        formData.append("file", new Blob([fileBuffer], { type: fileType }));
-        const REQUIRED_FIELDS =
-          "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
-        const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
+        formData.append("metadata", fileMetadataJSONBlob);
+        formData.append("file", fileBlob);
         try {
-          const response = await axios.post(_URL, formData, {
+          const REQUIRED_FIELDS =
+            "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
+          const _URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=${REQUIRED_FIELDS}`;
+          const response = await fetch(_URL, {
+            method: "POST",
             headers: {
-              "Authorization": `Bearer ${userToken}`,
-              "Content-Type": "multipart/form-data"
+              Authorization: `Bearer ${userToken}`
             },
-            responseType: "text",
-            onUploadProgress: function (progressEvent) {
-              if (progressEvent.lengthComputable) {
-                const percentComplete = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-                element.innerText = `${percentComplete}%`;
-              }
-            }
+            body: formData
           });
-          console.log(response.data);
-          sessionStorage.setItem("UPLOAD_RESPONSE", response.data);
-        } catch (error) {
-          console.log(error);
-          sessionStorage.setItem("UPLOAD_RESPONSE", "Error");
+          const responseText = await response.text();
+          clearInterval(interval);
+          element.innerText = "100%";
+          return responseText;
+        } catch {
+          clearInterval(interval);
+          element.innerText = "100%";
+          return "Error";
         }
       }
     </script>
 
     <script id="google-signin-script" src="https://accounts.google.com/gsi/client" async></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
       navigator.serviceWorker.register("service-worker.js");
