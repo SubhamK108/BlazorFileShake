@@ -2,11 +2,11 @@ namespace BlazorFileShake.Services;
 
 public static class DriveService
 {
-    private static readonly JsonSerializerOptions jsonSerializerOptions = new(JsonSerializerDefaults.Web)
+    private static readonly JsonSerializerOptions _jsonSerializerOptions = new(JsonSerializerDefaults.Web)
     {
         WriteIndented = true
     };
-    private static readonly Random random = new();
+    private static readonly Random _random = new();
 
     public static async Task<string> CheckForUploadFolder()
     {
@@ -19,7 +19,7 @@ public static class DriveService
             const string URL = $"https://www.googleapis.com/drive/v3/files?q={SEARCH_KEY}&fields={REQUIRED_FIELDS}";
             HttpResponseMessage response = await httpClient.GetAsync(URL);
             string responseBody = await response.Content.ReadAsStringAsync();
-            DriveSearchResult driveSearchResult = JsonSerializer.Deserialize<DriveSearchResult>(responseBody, jsonSerializerOptions) ??
+            DriveSearchResult driveSearchResult = JsonSerializer.Deserialize<DriveSearchResult>(responseBody, _jsonSerializerOptions) ??
                 throw new Exception("There was a problem in searching for the folder!");
             return driveSearchResult.Files.Length == 0 ? "" : driveSearchResult.Files[0].Id;
         }
@@ -36,7 +36,7 @@ public static class DriveService
             Name = "FileShake",
             MimeType = "application/vnd.google-apps.folder"
         };
-        JsonContent folderMetadataJSONContent = JsonContent.Create(folderMetadata, new MediaTypeHeaderValue("application/json"), jsonSerializerOptions);
+        JsonContent folderMetadataJSONContent = JsonContent.Create(folderMetadata, new MediaTypeHeaderValue("application/json"), _jsonSerializerOptions);
 
         using HttpClient httpClient = new();
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppState.UserToken);
@@ -46,7 +46,7 @@ public static class DriveService
             const string URL = $"https://www.googleapis.com/drive/v3/files?uploadType=media&fields={REQUIRED_FIELDS}";
             HttpResponseMessage response = await httpClient.PostAsync(URL, folderMetadataJSONContent);
             string responseBody = await response.Content.ReadAsStringAsync();
-            DriveMetadataMinimal createdFolder = JsonSerializer.Deserialize<DriveMetadataMinimal>(responseBody, jsonSerializerOptions) ??
+            DriveMetadataMinimal createdFolder = JsonSerializer.Deserialize<DriveMetadataMinimal>(responseBody, _jsonSerializerOptions) ??
                 throw new Exception("There was a problem in creating the folder!");
             bool isPermissionCreated = await CreateSharedPermission(createdFolder.Id);
             return isPermissionCreated ? createdFolder.Id : throw new Exception("There was a problem in creating the shared folder!");
@@ -60,7 +60,7 @@ public static class DriveService
     public static async Task<bool> CreateSharedPermission(string folderId)
     {
         PermissionCreatingMetadata permissionMetadata = new();
-        JsonContent permissionMetadataJSONContent = JsonContent.Create(permissionMetadata, new MediaTypeHeaderValue("application/json"), jsonSerializerOptions);
+        JsonContent permissionMetadataJSONContent = JsonContent.Create(permissionMetadata, new MediaTypeHeaderValue("application/json"), _jsonSerializerOptions);
 
         using HttpClient httpClient = new();
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppState.UserToken);
@@ -84,7 +84,7 @@ public static class DriveService
             MimeType = fileType,
             Parents = [folderId]
         };
-        JsonContent fileMetadataJSONContent = JsonContent.Create(fileMetadata, new MediaTypeHeaderValue("application/json"), jsonSerializerOptions);
+        JsonContent fileMetadataJSONContent = JsonContent.Create(fileMetadata, new MediaTypeHeaderValue("application/json"), _jsonSerializerOptions);
         ByteArrayContent fileByteArrayContent = new(fileByteArray);
         fileByteArrayContent.Headers.ContentType = new(fileType);
 
@@ -100,7 +100,7 @@ public static class DriveService
             const string REQUIRED_FIELDS = "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
             const string URL = $"https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields={REQUIRED_FIELDS}";
             HttpResponseMessage response = await httpClient.PostAsync(URL, content);
-            DriveMetadataStandard uploadResponseFile = await response.Content.ReadFromJsonAsync<DriveMetadataStandard>(jsonSerializerOptions) ??
+            DriveMetadataStandard uploadResponseFile = await response.Content.ReadFromJsonAsync<DriveMetadataStandard>(_jsonSerializerOptions) ??
                 throw new Exception("There was a problem in uploading the file!");
             string fileId = uploadResponseFile.Id;
             string fileName2 = HttpUtility.UrlEncode(uploadResponseFile.Name);
@@ -111,7 +111,7 @@ public static class DriveService
                 false => uploadResponseFile.FileExtension.ToUpper()
             };
             string downloadKey = $"{fileId}&{fileName2}&{fileSize}&{fileExtension}";
-            int key = random.Next(1, 26);
+            int key = _random.Next(1, 26);
             string encodedDownloadKey = Utils.CaesarCipher(downloadKey, key);
             string downloadLink = $"https://bfs.subhamk.com/r/{encodedDownloadKey}/{key}";
             return downloadLink;
