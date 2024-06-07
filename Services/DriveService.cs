@@ -76,21 +76,41 @@ public static class DriveService
         }
     }
 
-    public static string ProcessUploadResult(string uploadResponse)
+    public static async Task<string> UploadFile(byte[] fileByteArray, string fileName, string fileType, string folderId)
     {
+        FileCreatingMetadata fileMetadata = new()
+        {
+            Name = fileName,
+            MimeType = fileType,
+            Parents = [folderId]
+        };
+        JsonContent fileMetadataJSONContent = JsonContent.Create(fileMetadata, new MediaTypeHeaderValue("application/json"), jsonSerializerOptions);
+        ByteArrayContent fileByteArrayContent = new(fileByteArray);
+        fileByteArrayContent.Headers.ContentType = new(fileType);
+
+        using HttpClient httpClient = new();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AppState.UserToken);
+        MultipartFormDataContent content = new()
+        {
+            { fileMetadataJSONContent, "metadata" },
+            { fileByteArrayContent, "file" }
+        };
         try
         {
-            DriveMetadataStandard uploadedFile = JsonSerializer.Deserialize<DriveMetadataStandard>(uploadResponse, jsonSerializerOptions) ??
+            const string REQUIRED_FIELDS = "id, name, mimeType, size, fileExtension, fullFileExtension, webContentLink, parents, permissionIds";
+            const string URL = $"https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields={REQUIRED_FIELDS}";
+            HttpResponseMessage response = await httpClient.PostAsync(URL, content);
+            DriveMetadataStandard uploadResponseFile = await response.Content.ReadFromJsonAsync<DriveMetadataStandard>(jsonSerializerOptions) ??
                 throw new Exception("There was a problem in uploading the file!");
-            string fileId = uploadedFile.Id;
-            string fileName = HttpUtility.UrlEncode(uploadedFile.Name);
-            string fileSize = HttpUtility.UrlEncode(Utils.FormatBytes(Convert.ToInt64(uploadedFile.Size)));
-            string fileExtension = uploadedFile.FileExtension.Equals("") switch
+            string fileId = uploadResponseFile.Id;
+            string fileName2 = HttpUtility.UrlEncode(uploadResponseFile.Name);
+            string fileSize = HttpUtility.UrlEncode(Utils.FormatBytes(Convert.ToInt64(uploadResponseFile.Size)));
+            string fileExtension = uploadResponseFile.FileExtension.Equals("") switch
             {
-                true => fileName[(fileName.LastIndexOf('.') + 1)..].ToUpper(),
-                false => uploadedFile.FileExtension.ToUpper()
+                true => fileName2[(fileName2.LastIndexOf('.') + 1)..].ToUpper(),
+                false => uploadResponseFile.FileExtension.ToUpper()
             };
-            string downloadKey = $"{fileId}&{fileName}&{fileSize}&{fileExtension}";
+            string downloadKey = $"{fileId}&{fileName2}&{fileSize}&{fileExtension}";
             int key = random.Next(1, 26);
             string encodedDownloadKey = Utils.CaesarCipher(downloadKey, key);
             string downloadLink = $"https://bfs.subhamk.com/r/{encodedDownloadKey}/{key}";

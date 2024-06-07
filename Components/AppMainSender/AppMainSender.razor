@@ -18,7 +18,10 @@ else
         {
             if (!AppState.IsDriveUploadComplete)
             {
-                <DriveUploadContainer UpdateAppMainState="@UpdateAppMainState" />
+                <DriveUploadContainer 
+                    UpdateAppMainState="@UpdateAppMainState" 
+                    UpdateAppMainStateAsync="@UpdateAppMainStateAsync"
+                />
             }
             else
             {

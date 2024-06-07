@@ -10,6 +10,7 @@ public static class AppState
     public static List<UploadedFile> UploadedFiles { get; set; } = [];
     public static string FinalZipFileName { get; set; } = "";
     public static string FinalDownloadLink { get; set; } = "";
+    public static string ProgressInfo { get; set; } = "";
 
     public static void RefreshAppState()
     {
@@ -21,5 +22,6 @@ public static class AppState
         UploadedFiles = [];
         FinalZipFileName = "";
         FinalDownloadLink = "";
+        ProgressInfo = "";
     }
 }
