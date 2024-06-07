@@ -57,5 +57,6 @@
         }
         await Task.Delay(1500);
         IsLoading = false;
+        await InvokeAsync(StateHasChanged);
     }
 }
