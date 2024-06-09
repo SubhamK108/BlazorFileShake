@@ -29,10 +29,10 @@ jobs:
           dotnet workload install wasm-tools
           dotnet publish BlazorFileShake.csproj -c Release -o publish
 
-      - name: Remove secrets & config file
-        run: |
-          rm wwwroot/appsettings.json
-          rm publish/wwwroot/appsettings.json
+      # - name: Remove secrets & config file
+      #   run: |
+      #     rm wwwroot/appsettings.json
+      #     rm publish/wwwroot/appsettings.json
 
       - name: Copy 'index.html' to '404.html'
         run: cp publish/wwwroot/index.html publish/wwwroot/404.html
