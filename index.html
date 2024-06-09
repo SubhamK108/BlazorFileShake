@@ -53,14 +53,22 @@
     </div> -->
 
     <script type="text/javascript">
-      function addNewGoogleSignInScript() {
-        const prevScript = document.getElementById("google-signin-script");
-        document.body.removeChild(prevScript);
+      async function delay(time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+      }
 
+      async function addNewGoogleSignInScript() {
+        const prevScript = document.getElementById("google-signin-script");
+        if (prevScript !== null) {
+          document.body.removeChild(prevScript);
+        }
         const newScript = document.createElement("script");
         newScript.id = "google-signin-script";
         newScript.src = "https://accounts.google.com/gsi/client";
         newScript.async = true;
+
+        await delay(700);
+        document.getElementById("google-signin-button-loader").hidden = true;
         document.body.appendChild(newScript);
       }
 
@@ -80,16 +88,13 @@
       }
 
       async function getUserAuthToken(gmailId) {
-        const response = await fetch("./appsettings.json");
-        const appSettings = await response.json();
-
         const client = google.accounts.oauth2.initTokenClient({
-          client_id: appSettings.GoogleAuthClientId,
+          client_id: sessionStorage.getItem("CLIENT_ID"),
           scope:
             "https://www.googleapis.com/auth/userinfo.profile \
-            https://www.googleapis.com/auth/drive.appdata \
-            https://www.googleapis.com/auth/drive.install \
-            https://www.googleapis.com/auth/drive.file",
+          https://www.googleapis.com/auth/drive.appdata \
+          https://www.googleapis.com/auth/drive.install \
+          https://www.googleapis.com/auth/drive.file",
           hint: gmailId,
           prompt: "",
           callback: (tokenResponse) => {
@@ -108,7 +113,6 @@
       }
     </script>
 
-    <script id="google-signin-script" src="https://accounts.google.com/gsi/client" async></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>
       navigator.serviceWorker.register("service-worker.js");

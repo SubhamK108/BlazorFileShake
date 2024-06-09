@@ -25,7 +25,7 @@
       "url": "_framework\/icudt_no_CJK.dat"
     },
     {
-      "hash": "sha256-pHD0oYvRJMrOj1lyba9D4WxgpOtqexWkqtNm3W1wKQ8=",
+      "hash": "sha256-w+Bbcvke4JgvZQr4pbGEdN0tTVXZCin21SjXIVeo\/Ig=",
       "url": "_framework\/blazor.boot.json"
     },
     {
@@ -33,11 +33,11 @@
       "url": "_framework\/dotnet.native.8.0.6.33iyof2aha.js"
     },
     {
-      "hash": "sha256-6oUtiR3YPW+wJJdjYjthFOc5sA5fZ+nyZQREXE1+QKc=",
+      "hash": "sha256-kZma39saRGRqB\/548Z3qe0bGDGP826rogYzDd7ooD34=",
       "url": "_framework\/dotnet.native.wasm"
     },
     {
-      "hash": "sha256-jdyEzgbiyaBxjBoa2BVxa51frTSLF3cy+F0hg6beams=",
+      "hash": "sha256-inhLyVJvSmejeASoIlspPJ872CSvEdW3hXRL4d2Awyc=",
       "url": "_framework\/BlazorFileShake.wasm"
     },
     {
@@ -141,7 +141,7 @@
       "url": "_framework\/System.Net.Primitives.wasm"
     },
     {
-      "hash": "sha256-41VlMKoemgqOJAGlbMGiKW0\/5DSKyV0aWxvmAEssmj8=",
+      "hash": "sha256-yZZ02FxU5ft0H2daZdvAF43LVmEvTGSEoefIVJULJbc=",
       "url": "_framework\/System.Private.CoreLib.wasm"
     },
     {
@@ -153,7 +153,7 @@
       "url": "_framework\/System.Runtime.InteropServices.JavaScript.wasm"
     },
     {
-      "hash": "sha256-iJ7cT0fGAClEcjytv245CKAZSpFx9EbgSZUCZY6YHGc=",
+      "hash": "sha256-Z0wC5nAVRmiSet40fc1Z98ZhG7T4ZgXfL6ckJ6tMdF8=",
       "url": "_framework\/System.Runtime.wasm"
     },
     {
@@ -189,7 +189,7 @@
       "url": "apple-touch-icon.png"
     },
     {
-      "hash": "sha256-rWjQEs40Ucw3YckCwFlu6rdCOr4y1r2KDiDH0oY+T9E=",
+      "hash": "sha256-sqjYigKtBQODhaDXeduwaqbbEhC66zHE0kQRsnBsrQw=",
       "url": "css\/main.min.css"
     },
     {
@@ -261,7 +261,7 @@
       "url": "images\/screenshots\/SS_8.jpeg"
     },
     {
-      "hash": "sha256-tjddOlnYYdXG5l3qnhbw32RWeeDLFk8Dhs7YGyvonbA=",
+      "hash": "sha256-4bDuXU5JxZwQp\/y3p1movrVfVpvxMMV9YmimSQ32Ug0=",
       "url": "index.html"
     },
     {
@@ -269,5 +269,5 @@
       "url": "manifest.json"
     }
   ],
-  "version": "QqeBPtj7"
+  "version": "OwYlAe+9"
 };
