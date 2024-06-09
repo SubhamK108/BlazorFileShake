@@ -1,3 +1,4 @@
+@inject IConfiguration Configuration
 @inject IJSRuntime JS
 
 @if (!IsLoading)
@@ -12,7 +13,12 @@
                 <p class="text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem]">
                     Sign in to proceed, and make sure to allow the pop-ups:
                 </p>
-                <SignInButton />            
+                <div class="h-12 flex justify-center items-center">
+                    <div id="google-signin-button-loader">
+                        <Spinner Size="@Spinner.Sizes.SMALL" />
+                    </div>
+                    <SignInButton />
+                </div>
                 <div class="max-sm:text-[0.9rem] font-sans flex flex-row justify-center items-center gap-3">
                     <a href="/privacy-policy" target="_blank" class="underline hover:text-[#26272A] dark:hover:text-white">
                         Privacy Policy
@@ -29,7 +35,7 @@
 else
 {
     <div class="h-full w-full flex justify-center items-center">
-        <Spinner />
+        <Spinner Size="@Spinner.Sizes.LARGE" />
     </div>
 }
 
@@ -39,6 +45,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await JS.InvokeVoidAsync("sessionStorage.setItem", "CLIENT_ID", @Configuration["GoogleAuthClientId"]);
         string userToken = await JS.InvokeAsync<string>("sessionStorage.getItem", "USER_GOOGLE_AUTH_TOKEN");
         while (userToken is null || userToken.Equals(""))
         {
@@ -47,6 +54,7 @@ else
         }
         IsLoading = true;
         await InvokeAsync(StateHasChanged);
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "CLIENT_ID");
         await JS.InvokeVoidAsync("sessionStorage.removeItem", "USER_GOOGLE_AUTH_TOKEN");
         await Task.Delay(1000);
 
