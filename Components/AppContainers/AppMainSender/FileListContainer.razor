@@ -79,6 +79,7 @@ else
     private void ReUploadFiles()
     {
         AppState.UploadedFiles.Clear();
+        AppState.FinalZipFileName = "";
         AppState.IsUploadComplete = false;
         UpdateAppMainState();
     }
