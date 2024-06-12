@@ -93,16 +93,20 @@ else
             }
         }
         string downloadLink = await StartFileUpload(fileByteArray, fileName, fileType, folderId);
-        AppState.ProgressInfo = "Almost done...";
-        await InvokeAsync(StateHasChanged);
-        await Task.Delay(2000);
-
         if (downloadLink.Equals("Error"))
         {
             IsError = true;
         }
         else
         {
+            AppState.ProgressInfo = "Uploading: 100%";
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(1500);
+
+            AppState.ProgressInfo = "Almost done...";
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(2000);
+
             AppState.FinalDownloadLink = downloadLink;
             AppState.IsDriveUploadComplete = true;
             await UpdateAppMainStateAsync();
@@ -114,9 +118,6 @@ else
         StartProgressTimer(fileByteArray.LongLength);
         string uploadResult = await DriveService.UploadFile(fileByteArray, fileName, fileType, folderId);
         _timer!.Dispose();
-        AppState.ProgressInfo = "Uploading: 100%";
-        await InvokeAsync(StateHasChanged);
-        await Task.Delay(1500);
         return uploadResult;
     }
 
