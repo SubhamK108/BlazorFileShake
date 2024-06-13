@@ -131,8 +131,11 @@ else
         {
             TimeSpan elapsedTime = DateTime.Now - startTime;
             int progressPercent = Math.Min((int)((elapsedTime.TotalMilliseconds / estimatedTime) * 100), 100);
-            AppState.ProgressInfo = $"Uploading: {progressPercent}%";
-            await InvokeAsync(StateHasChanged);
+            if (progressPercent > 0)
+            {
+                AppState.ProgressInfo = $"Uploading: {progressPercent}%";
+                await InvokeAsync(StateHasChanged);
+            }
             if (progressPercent >= 100)
             {
                 _timer!.Dispose();
