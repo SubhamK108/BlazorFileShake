@@ -59,7 +59,7 @@ else
             }
             archive.Dispose();
             byte[] compressedBytes = compressedStream.ToArray();
-            await ProcessDriveUpload(compressedBytes, $"{AppState.FinalZipFileName}.zip", "application/zip");
+            await ProcessDriveUpload(compressedBytes, $"{AppState.FinalZipFileName.Trim()}.zip", "application/zip");
         }
         else
         {
