@@ -41,6 +41,10 @@
             }
             (string downloadKey, int key) = (keys[0], Convert.ToInt32(keys[1]));
             string[] downloadKeys = Utils.DecryptCaesarCipher(downloadKey, key).Split('&');
+            if (downloadKeys.Length != 4)
+            {
+                throw new Exception("Invalid download link!");
+            }
             bool isValidFile = await DriveService.VerifySharedFile(downloadKeys[0]);
             if (isValidFile)
             {
