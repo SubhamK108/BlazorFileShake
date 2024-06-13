@@ -42,13 +42,16 @@
     </div>
     <div class="h-[60%] w-full flex flex-col justify-center items-center gap-5 max-sm:gap-4">
         <p class="text-[1.3rem] max-2xl:text-[1.1rem] max-sm:text-[0.95rem]">You can also share this QR Code:</p>
-        <div class="bg-white rounded-3xl p-6 max-2xl:p-5 max-sm:p-4 border border-[#AEAEAE] shadow-md dark:shadow-lg pointer-events-none">
+        <div class="bg-white text-[#404756] rounded-3xl p-6 max-2xl:p-5 max-sm:p-4 border border-[#AEAEAE] shadow-md dark:shadow-lg pointer-events-none">
             <img 
                 src="@($"https://api.qrserver.com/v1/create-qr-code/?data={AppState.FinalDownloadLink}")"
                 alt="Share QR Code"
                 loading="eager"
-                class="h-[14rem] w-[14rem] max-2xl:h-[12rem] max-2xl:w-[12rem] max-sm:h-[9rem] max-sm:w-[9rem]"
+                class="@(IsQRCodeLoaded ? "" : "hidden") h-[14rem] w-[14rem] max-2xl:h-[12rem] max-2xl:w-[12rem] max-sm:h-[9rem] max-sm:w-[9rem]"
             />
+            <div class="@(IsQRCodeLoaded ? "hidden" : "") h-[14rem] w-[14rem] max-2xl:h-[12rem] max-2xl:w-[12rem] max-sm:h-[9rem] max-sm:w-[9rem] flex justify-center items-center">
+                <Spinner Size="@Spinner.Sizes.LARGE" />
+            </div>
         </div>
     </div>
 </div>
@@ -56,7 +59,19 @@
 @code {
     [Parameter] public Action UpdateAppMainState { get; init; } = () => { };
     private bool IsCopyToClipboardDone { get; set; } = false;
+    private bool IsQRCodeLoaded { get; set; } = false;
     private Timer? _timer = null;
+    private Timer? _timer2 = null;
+
+    protected override void OnInitialized()
+    {
+        _timer2 = new(async _ =>
+        {
+            IsQRCodeLoaded = true;
+            await InvokeAsync(StateHasChanged);
+            _timer2!.Dispose();
+        }, null, 1500, Timeout.Infinite);
+    }
 
     private async Task CopyToClipboard()
     {
